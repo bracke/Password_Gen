@@ -1,4 +1,3 @@
 # Password_Gen
-A password generator using Gnoga
+A password generator using Ada_GUI (https://github.com/jrcarter/Ada_GUI)
 
-Edit password_gen.gpr to match your location for Gnoga
