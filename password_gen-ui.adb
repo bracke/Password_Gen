@@ -36,34 +36,38 @@ package body Password_Gen.UI is
    use type Ada_GUI.Event_Kind_ID;
    use type Ada_GUI.Widget_ID;
 begin -- Password_Gen.UI
-   Ada_GUI.Set_Up (Grid => (1 => (1 => Ada_GUI.Right, 2 => Ada_GUI.Left) ), Title => "Password Generator");
+   Ada_GUI.Set_Up (Grid => (1 => (1 => (Kind => Ada_GUI.Area, Alignment => Ada_GUI.Right),
+                                  2 => (Kind => Ada_GUI.Area, Alignment => Ada_GUI.Left) ) ),
+                   Title => "Password Generator");
 
-   Domain := Ada_GUI.New_Text_Box
-      (Row => 1, Column => 1, Text => "", Label => "Domain:", Placeholder => "example.com, example.fr, example.co.uk");
-   Master := Ada_GUI.New_Password_Box (Row => 1, Column => 1, Break_Before => True, Label => "Master Password:");
-   Length := Ada_GUI.New_Text_Box
-      (Row => 1, Column => 1, Text => "14", Break_Before => True, Label => "Password Length (8-20):", Width => 2);
+   Domain := Ada_GUI.New_Text_Box (Text => "", Label => "Domain:", Placeholder => "example.com, example.fr, example.co.uk");
+   Master := Ada_GUI.New_Password_Box (Break_Before => True, Label => "Master Password:");
+   Length := Ada_GUI.New_Text_Box (Text => "14", Break_Before => True, Label => "Password Length (8-20):", Width => 2);
    Length.Set_Text_Aligbnment (Alignment => Ada_GUI.Right);
-   Symbol_Label := Ada_GUI.New_Background_Text (Row => 1, Column => 1, Text => "Symbol:", Break_Before => True);
-   Symbol := Ada_GUI.New_Selection_List (Row => 1, Column => 1, Text => (1 .. 0 => <>) );
+   Symbol_Label := Ada_GUI.New_Background_Text (Text => "Symbol:", Break_Before => True);
+   Symbol := Ada_GUI.New_Selection_List;
    Symbol.Insert (Text => Password_Generation.No_Symbol);
    Symbol.Insert (Text => Password_Generation.Auto_Symbol);
 
    All_Symbols : for I in Password_Generation.Symbol_Set'Range loop
-      Symbol.Insert (Text => (1 => Password_Generation.Symbol_Set (I) ) );
+      Symbol.Insert (Text => Password_Generation.Symbol_Set (I) & "");
    end loop All_Symbols;
 
    Symbol.Set_Selected (Index => 2); -- Auto
-   Hash_Symbol := Ada_GUI.New_Check_Box (Row => 1, Column => 1, Label => "Include Symbol in hash", Active => True);
-   Result := Ada_GUI.New_Text_Box (Row => 1, Column => 1, Text => "", Break_Before => True);
+   Hash_Symbol := Ada_GUI.New_Check_Box (Label => "Include Symbol in hash", Active => True);
+   Result := Ada_GUI.New_Text_Box (Text => "", Break_Before => True);
    Result.Set_Text_Font_Kind (Kind => Ada_GUI.Monospaced);
-   Generate := Ada_GUI.New_Button (Row => 1, Column => 1, Text => "Generate");
-   Quit := Ada_GUI.New_Button (Row => 1, Column => 1, Text => "Quit", Break_Before => True);
+   Generate := Ada_GUI.New_Button (Text => "Generate");
+   Quit := Ada_GUI.New_Button (Text => "Quit", Break_Before => True);
 
    All_Events : loop
-      Event := Ada_GUI.Next_Event;
+      exit All_Events when Ada_GUI.Window_Closed;
+
+      Event := Ada_GUI.Next_Event (Timeout => 1.0);
 
       if not Event.Timed_Out and then Event.Event.Kind = Ada_GUI.Left_Click then
+         exit All_Events when Event.Event.ID = Quit;
+
          if Event.Event.ID = Generate then
             Generation : begin
                Result.Set_Text (Text => Password_Generation.Generate (Domain.Text,
@@ -76,15 +80,11 @@ begin -- Password_Gen.UI
                Length.Set_Text (Text => "14");
                Result.Set_Text (Text => "");
             end Generation;
-         elsif Event.Event.ID = Quit then
-            Ada_GUI.End_GUI;
-
-            exit All_Events;
-         else
-            null;
          end if;
       end if;
    end loop All_Events;
+
+   Ada_GUI.End_GUI;
 exception -- Password_Gen.UI
 when E : others =>
    Ada.Text_IO.Put_Line (Item => Ada.Exceptions.Exception_Information (E) );
