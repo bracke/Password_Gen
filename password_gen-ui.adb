@@ -61,25 +61,27 @@ begin -- Password_Gen.UI
    Quit := Ada_GUI.New_Button (Text => "Quit", Break_Before => True);
 
    All_Events : loop
-      exit All_Events when Ada_GUI.Window_Closed;
-
       Event := Ada_GUI.Next_Event (Timeout => 1.0);
 
-      if not Event.Timed_Out and then Event.Event.Kind = Ada_GUI.Left_Click then
-         exit All_Events when Event.Event.ID = Quit;
+      if not Event.Timed_Out then
+         exit All_Events when Event.Event.Kind = Ada_GUI.Window_Closed;
 
-         if Event.Event.ID = Generate then
-            Generation : begin
-               Result.Set_Text (Text => Password_Generation.Generate (Domain.Text,
-                                                                      Master.Text,
-                                                                      Positive'Value (Length.Text),
-                                                                      Symbol.Text,
-                                                                      Hash_Symbol.Active) );
-            exception -- Generation
-            when others => -- Invalid Length
-               Length.Set_Text (Text => "14");
-               Result.Set_Text (Text => "");
-            end Generation;
+         if Event.Event.Kind = Ada_GUI.Left_Click then
+            exit All_Events when Event.Event.ID = Quit;
+
+            if Event.Event.ID = Generate then
+               Generation : begin
+                  Result.Set_Text (Text => Password_Generation.Generate (Domain.Text,
+                                                                         Master.Text,
+                                                                         Positive'Value (Length.Text),
+                                                                         Symbol.Text,
+                                                                         Hash_Symbol.Active) );
+               exception -- Generation
+               when others => -- Invalid Length
+                  Length.Set_Text (Text => "14");
+                  Result.Set_Text (Text => "");
+               end Generation;
+            end if;
          end if;
       end if;
    end loop All_Events;
