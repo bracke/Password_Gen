@@ -43,7 +43,7 @@ begin -- Password_Gen.UI
    Domain := Ada_GUI.New_Text_Box (Text => "", Label => "Domain:", Placeholder => "example.com, example.fr, example.co.uk");
    Master := Ada_GUI.New_Password_Box (Break_Before => True, Label => "Master Password:");
    Length := Ada_GUI.New_Text_Box (Text => "14", Break_Before => True, Label => "Password Length (8-20):", Width => 2);
-   Length.Set_Text_Aligbnment (Alignment => Ada_GUI.Right);
+   Length.Set_Text_Alignment (Alignment => Ada_GUI.Right);
    Symbol_Label := Ada_GUI.New_Background_Text (Text => "Symbol:", Break_Before => True);
    Symbol := Ada_GUI.New_Selection_List;
    Symbol.Insert (Text => Password_Generation.No_Symbol);
