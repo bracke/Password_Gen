@@ -8,7 +8,7 @@
 --
 with Ada.Characters.Handling;
 with GNAT.SHA512;
-with PragmARC.Unbounded_Integers;
+with PragmARC.Unbounded_Numbers.Integers;
 
 package body Password_Generation is
    function Generate (Domain : String; Master : String; Length : Length_Value; Symbol : String; Hash_Symbol : Boolean := True)
@@ -23,7 +23,7 @@ package body Password_Generation is
       function Digest (Source : String) return String is
          -- Empty
       begin -- Digest
-         return PragmARC.Unbounded_Integers.Image (PragmARC.Unbounded_Integers.Value ("16#" & Gnat.SHA512.Digest (Source) & '#'),
+         return PragmARC.Unbounded_Numbers.Integers.Image (PragmARC.Unbounded_Numbers.Integers.Value ("16#" & Gnat.SHA512.Digest (Source) & '#'),
                                                    Base => 36);
       end Digest;
 
