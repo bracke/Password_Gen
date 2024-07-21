@@ -8,6 +8,10 @@ maintainers-logins = ["bracke"]
 licenses = "GPL-3.0-or-later"
 website = "https://github.com/bracke/Password_Gen"
 tags = ["passwordmaker"]
+long-description = """
+# Password_Gen
+A password generator using Ada_GUI (https://github.com/jrcarter/Ada_GUI)
+"""
 
 executables = ["password_gen"]
 
