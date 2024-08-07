@@ -27,3 +27,6 @@ ada_gui = "^20240224.0.0"
 
 [[depends-on]]
 pragmarc = "^20240323.0.0"
+
+[[depends-on]]
+ssl = "^3.0.2"
